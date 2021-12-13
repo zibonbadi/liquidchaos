@@ -1,0 +1,22 @@
+{
+    "name": "zibonbadi/liquidchaos",
+    "description": "Reference server for the chaosnet server browser API",
+    "type": "project",
+    "require": {
+        "php": ">=8.0",
+        "ext-mbstring": "*",
+        "ext-yaml": "*",
+        "bramus/router": "^1.6"
+    },
+    "license": "AGPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "zibonbadi",
+            "email": "zibonbadi@users.noreply.github.com"
+        },
+        {
+            "name": "thewane",
+            "email": "thewane@users.noreply.github.com"
+        }
+    ]
+}
