@@ -25,7 +25,8 @@ INSTALLATION
    - EXT_MBSTRING
    - EXT_YAML
 
-   You will also need to set up a MySQL server and se
+   You will also need to set up a MySQL server and configure a connection
+   to it in the `env.yaml`.
 
 1. Simply clone the repository: `https://github.com/zibonbadi/liquidchaos.git`
 2. Then install the necessary dependencies: `composer install`
