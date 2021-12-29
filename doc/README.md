@@ -46,12 +46,17 @@ INSTALLATION
 USAGE/DEPLOYMENT
 ----------------
 
-To start the server, simply run the following command from within this
-repository:
+Although liquidchaos is designed to be able to run on regular HTTP CGI
+servers such as [Apache] or [nginx], you can launch a development server
+(here on port 8000) using the following command:
+
+[Apache]: <https://httpd.apache.org/>
+[nginx]: <https://nginx.org/en/>
 
 ```
-php liquidchaos serve
+php -S localhost:8000
 ```
+
 
 CONFIGURATION
 -------------
@@ -62,21 +67,34 @@ The most important configuration will be located within the file
 ```YAML
 ---
 # This is an example env.yaml for a liquidchaos node environment
-db:
+db: &dbdef
    # Database configuration (WIP)
 peers: # Peers to send requests to
-- "http://URL1"
-- "https://URL2"
-- "etc."
+  "https://URL1":
+    auth: &authdef
+      user: alice
+      public_key: &keydef
+        type: string|file|eval
+        value: "alice12345" # applies to strings
+        path: "/path/to/file" # applies to files
+        eval: "gpg -d $HOME/path/to/keyfile" # applies to evals
+      secret_key: *keydef
+  [...]
 ...
 ```
+
+**Pro tip**: This example has been shortened through the use of YAML node
+identifiers. You can use this syntax to automatically repeat redundant
+information as per [YAML spec].
+
+[YAML spec]: <https://yaml.org/spec/>
 
 More security-sensitive configuration, such as user management will have to
 be done through the database. For that we provide a tool for easily, but
 manually registering users and their public keys:
 
 ```
-php liquidchaos user:register 
+liquidchaos user:register 
 ```
 
 **WARNING:** ALTHOUGH WE PROVIDE A DEFAULT USER FOR INITIAL CONFIGURATION,

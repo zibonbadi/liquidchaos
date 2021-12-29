@@ -1,0 +1,26 @@
+#!/usr/bin/php
+<?php
+
+// Load commands
+require_once __DIR__.'/vendor/autoload.php';
+
+// Load settings/defaults; Sanity check
+include_once __DIR__.'/sanity.php';
+
+if(array_key_exists(1, $argv)){
+      $iFile = __DIR__.'/console/'.$argv[1].'.php';
+   if(file_exists($iFile)){
+      include_once $iFile;
+   }else{
+      // Unknown command
+      echo "Unknown command '${argv[1]}'. Please use \"liquidchaos list\".\n";
+      exit;
+}
+}else{
+   echo "Command needed. Please use \"liquidchaos list\".\n";
+   exit;
+}
+
+
+?>
+
