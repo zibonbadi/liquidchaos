@@ -2,37 +2,59 @@
 
 // Sanity checks
 if (!extension_loaded('yaml')) {
-    echo "CRITICAL: EXT_YAML not found! Please activate it in your PHP environment!\n";
+    echo "\033[31mCRITICAL:\033[0m EXT_YAML not found! Please activate it in your PHP environment!\n";
     exit;
 }
 
 if (!extension_loaded('mbstring')) {
-    echo "CRITICAL: EXT_MBSTRING not found! Please activate it in your PHP environment!\n";
+    echo "\033[31mCRITICAL:\033[0m EXT_MBSTRING not found! Please activate it in your PHP environment!\n";
+    exit;
+}
+
+if (!extension_loaded('pdo')) {
+    echo "\033[31mCRITICAL:\033[0m EXT_PDO not found! Please activate it in your PHP environment!\n";
     exit;
 }
 
 if (!extension_loaded('curl')) {
-    echo "CRITICAL: EXT_CURL not found! Please activate it in your PHP environment!\n";
+    echo "\033[31mCRITICAL:\033[0m EXT_CURL not found! Please activate it in your PHP environment!\n";
     exit;
 }
 
 
 // Load settings
-$config = [];
+$LIQUIDCHAOS_CONFIG = [];
 if( PHP_SAPI == "cli" ){
-   $config = yaml_parse_file(__DIR__."/env.yaml", -1);
+   $LIQUIDCHAOS_CONFIG = yaml_parse_file(__DIR__."/env.yaml", -1);
 
-   if($config === false){
-       echo "CRITICAL: env.yaml not found! Please configure your server using env.yaml.example!\n";
+   if($LIQUIDCHAOS_CONFIG === false){
+       echo <<<END
+       \033[31mCRITICAL:\033[0m env.yaml not found! Please run 'liquidchaos init'
+       or configure your server manually using env.yaml.example!
+       END;
        exit;
    }
 
    // Merge all yaml configs together
    $tmp = [];
-   foreach($config as $docname => $doc) {
+   foreach($LIQUIDCHAOS_CONFIG as $docname => $doc) {
       $tmp = array_merge_recursive($tmp, $doc);
    }
-   $config = $tmp;
+   $LIQUIDCHAOS_CONFIG = $tmp;
    unset($tmp);
 }
+
+// Configure defaults
+if( !array_key_exists("basepath",$LIQUIDCHAOS_CONFIG) ){ $LIQUIDCHAOS_CONFIG["basepath"] = '/'; }
+if( array_key_exists("peers",$LIQUIDCHAOS_CONFIG) ){
+    foreach( $LIQUIDCHAOS_CONFIG["peers"] as $peer_url => $peer_data){
+	echo "- <".$peer_url.">\n";
+	if( !array_key_exists("type",$peer_data) ){
+	    $peer_data["type"] = 'string';
+	    $peer_data["value"] = 'changeme';
+	}
+    }
+    echo "\n";
+}else{ $LIQUIDCHAOS_CONFIG["peers"] = null; }
+
 ?>
